@@ -1,54 +1,52 @@
 package com.flight.booking.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
-
 @Entity
-@Table(name = "flights")
-@Data
+@Table(name = "flights", schema = "flight_booking_system")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedQueries({
-        @NamedQuery(
-                name = "Flight.findBySource",
-                query = "SELECT f FROM Flight f WHERE f.source = :source"
-        ),
-        @NamedQuery(
-                name = "Flight.findHighPrice",
-                query = "SELECT f FROM Flight f WHERE f.price > :minPrice ORDER BY f.price DESC"
-        ),
-        @NamedQuery(
-                name = "Flight.countByDestination",
-                query = "SELECT COUNT(f) FROM Flight f WHERE f.destination = :destination"
-        )
-})
+@Builder
 public class Flight {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "flight_id")
+    private Long flightId;
 
-    @Column(nullable = false)
-    private String flightNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "airline_code", nullable = false)
+    private Airline airline;
 
-    @Column(nullable = false)
-    private String airline;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_airport", nullable = false)
+    private Airport fromAirport;
 
-    private String source;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_airport", nullable = false)
+    private Airport toAirport;
 
-    private String destination;
-
+    @Column(name = "departure_ts", nullable = false)
     private LocalDateTime departureTime;
 
+    @Column(name = "arrival_ts", nullable = false)
     private LocalDateTime arrivalTime;
 
-    private Double price;
+    @Column(name = "stops")
+    private Short stops;
 
-    private Integer availableSeats;
+    @Column(name = "base_price", precision = 10, scale = 2)
+    private BigDecimal basePrice;
+
+    @Column(name = "available_seats")
+    private Short availableSeats;
+
+    @Column(name = "duration_mins")
+    private Integer durationMinutes;
 }

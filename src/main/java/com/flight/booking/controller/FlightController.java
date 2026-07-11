@@ -1,7 +1,11 @@
 package com.flight.booking.controller;
 
-import com.flight.booking.entity.Flight;
-import com.flight.booking.service.FlightService;
+
+
+import com.flight.booking.dto.request.FlightRequestDTO;
+import com.flight.booking.dto.response.FlightResponseDTO;
+import com.flight.booking.service.FlightServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,66 +18,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FlightController {
 
-    private final FlightService service;
+    private final FlightServiceImpl service;
 
     @PostMapping
-    public ResponseEntity<Flight> createFlight(
-            @RequestBody Flight flight) {
+    public ResponseEntity<FlightResponseDTO> createFlight(
+            @Valid @RequestBody FlightRequestDTO dto) {
 
-        Flight created = service.createFlight(flight);
+        FlightResponseDTO response = service.createFlight(dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(created);
+                .body(response);
     }
 
     @GetMapping
-    public List<Flight> getAllFlights() {
+    public List<FlightResponseDTO> getAllFlights() {
         return service.getAllFlights();
     }
 
     @GetMapping("/{id}")
-    public Flight getFlightById(@PathVariable Long id) {
+    public FlightResponseDTO getFlightById(@PathVariable Long id) {
         return service.getFlightById(id);
     }
 
-    @GetMapping("/source/{source}")
-    public List<Flight> getFlightsBySource(
-            @PathVariable String source) {
-
-        return service.getFlightsBySource(source);
-    }
-
-    @GetMapping("/price/{price}")
-    public List<Flight> getExpensiveFlights(
-            @PathVariable Double price) {
-
-        return service.getExpensiveFlights(price);
-    }
-
-    @GetMapping("/count/{destination}")
-    public Long countFlights(
-            @PathVariable String destination) {
-
-        return service.countFlights(destination);
-    }
-
     @PutMapping("/{id}")
-    public Flight updateFlight(@PathVariable Long id,
-                               @RequestBody Flight flight) {
+    public ResponseEntity<FlightResponseDTO> updateFlight(
+            @PathVariable Long id,
+            @Valid @RequestBody FlightRequestDTO dto) {
 
-        return service.updateFlight(id, flight);
-    }
+        FlightResponseDTO response = service.updateFlight(id, dto);
 
-    @PatchMapping("/{id}")
-    public Flight patchFlight(@PathVariable Long id,
-                              @RequestBody Flight flight) {
-
-        return service.patchFlight(id, flight);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFlight(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFlight(@PathVariable Long id) {
+
         service.deleteFlight(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

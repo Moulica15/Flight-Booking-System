@@ -1,10 +1,9 @@
 package com.flight.booking.repository;
 
-import com.flight.booking.entity.Flight;
+import com.flight.booking.entity.Airport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FlightRepository extends JpaRepository<Flight, Long> {
-
+public interface AirportRepository extends JpaRepository<Airport, String> {
 }
