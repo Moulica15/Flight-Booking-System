@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -34,6 +35,23 @@ public class FlightController {
     @GetMapping
     public List<FlightResponseDTO> getAllFlights() {
         return service.getAllFlights();
+    }
+
+    @GetMapping("/search")
+    public Page<FlightResponseDTO> searchFlights(
+
+            @RequestParam String from,
+
+            @RequestParam String to,
+
+            @RequestParam(defaultValue = "0") int page,
+
+            @RequestParam(defaultValue = "5") int size
+
+    ) {
+
+        return service.searchFlights(from, to, page, size);
+
     }
 
     @GetMapping("/{id}")
