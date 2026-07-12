@@ -10,6 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.math.BigDecimal;
+import com.flight.booking.dto.search.FlightSearchCriteria;
+import com.flight.booking.specification.FlightSpecification;
+
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -65,20 +74,19 @@ public class FlightServiceImpl {
     }
 
     public Page<FlightResponseDTO> searchFlights(
-            String fromAirport,
-            String toAirport,
-            int page,
-            int size
+
+            FlightSearchCriteria criteria,
+
+            Pageable pageable
+
     ) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Specification<Flight> specification =
+                FlightSpecification.searchFlights(criteria);
 
         return repository
-                .findByFromAirport_AirportCodeAndToAirport_AirportCode(
-                        fromAirport,
-                        toAirport,
-                        pageable
-                )
+                .findAll(specification, pageable)
                 .map(flightMapper::toResponseDTO);
+
     }
 }
