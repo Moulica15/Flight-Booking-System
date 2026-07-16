@@ -5,9 +5,10 @@
 
   <select [(ngModel)]="filters.airline" (ngModelChange)="applyFilters()">
     <option value="">All Airlines</option>
-    <option value="DL">Delta Air Lines</option>
-    <option value="EK">Emirates</option>
-    <option value="AI">Air India</option>
+
+    <option *ngFor="let airline of airlines" [value]="airline.airlineCode">
+      {{ airline.airlineName }}
+    </option>
   </select>
 
   <label>Maximum Price</label>
@@ -16,6 +17,17 @@
     type="number"
     [(ngModel)]="filters.maxPrice"
     placeholder="₹ Maximum Price"
+    (ngModelChange)="applyFilters()"
+  />
+
+  <label>Maximum Price</label>
+
+  <input
+    type="range"
+    min="0"
+    [max]="maxPriceLimit"
+    step="50"
+    [(ngModel)]="filters.maxPrice"
     (ngModelChange)="applyFilters()"
   />
 

@@ -26,6 +26,8 @@ export class HomeComponent {
   flights: any[] = [];
   allFlights: Flight[] = [];
   searchedFlights: Flight[] = [];
+  airlines: any[] = [];
+  maxPriceLimit = 1000;
 
   constructor(
     private router: Router,
@@ -44,7 +46,7 @@ export class HomeComponent {
     this.flights = [...flights];
   }
 
-  oonFilterChanged(filters: any): void {
+  onFilterChanged(filters: any): void {
     console.log(filters);
 
     // If user searched, filter search results.
@@ -107,7 +109,16 @@ export class HomeComponent {
     this.flightService.getAllFlights().subscribe({
       next: (response) => {
         this.allFlights = response;
+
         this.flights = [...response];
+        this.maxPriceLimit = Math.max(
+          ...response.map((flight) => flight.basePrice),
+        );
+        this.airlines = response.filter(
+          (flight, index, self) =>
+            index ===
+            self.findIndex((f) => f.airlineCode === flight.airlineCode),
+        );
       },
 
       error: (error) => {

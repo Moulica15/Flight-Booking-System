@@ -19,7 +19,11 @@
   <!-- Main Content -->
   <div class="content">
     <!-- Left Filters -->
-    <app-flight-filters (filterChanged)="onFilterChanged($event)">
+    <app-flight-filters
+      [airlines]="airlines"
+      [maxPriceLimit]="maxPriceLimit"
+      (filterChanged)="onFilterChanged($event)"
+    >
     </app-flight-filters>
 
     <!-- Right Flight Results -->
